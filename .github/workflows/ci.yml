@@ -6,6 +6,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:   # Optional: allows manual trigger
 
 jobs:
   backend-test:
@@ -21,6 +22,14 @@ jobs:
         with:
           python-version: "3.10"
 
+      - name: Cache pip packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install backend dependencies
         working-directory: backend
         run: |
@@ -29,13 +38,15 @@ jobs:
           pip install pytest pytest-asyncio pylint
 
       - name: Lint backend code
-        working-directory: backend
+        shell: bash
         run: |
+          export PYTHONPATH=$PWD/backend
           pylint core api controller utils --disable=R,C,W
 
       - name: Run backend unit tests (if any)
-        working-directory: backend
+        shell: bash
         run: |
+          export PYTHONPATH=$PWD/backend
           pytest tests || echo "No backend tests found"
 
   frontend-test:
