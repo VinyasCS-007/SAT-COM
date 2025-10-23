@@ -8,7 +8,7 @@ on:
     branches: [ main ]
 
 jobs:
-  backend-test:
+    backend-test:
     name: Backend Tests & Lint
     runs-on: ubuntu-latest
 
@@ -28,16 +28,16 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-asyncio pylint
 
-      - name: Set PYTHONPATH for backend
-        run: echo "PYTHONPATH=$PWD/backend" >> $GITHUB_ENV
-
       - name: Lint backend code
+        working-directory: backend
         run: |
-          pylint backend/core backend/api backend/controller backend/utils --disable=R,C,W
+          pylint core api controller utils --disable=R,C,W
 
       - name: Run backend unit tests (if any)
+        working-directory: backend
         run: |
-          pytest backend/tests || echo "No backend tests found"
+          pytest tests || echo "No backend tests found"
+
 
   frontend-test:
     name: Frontend Build & Type Check
