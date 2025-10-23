@@ -1,0 +1,10 @@
+fastapi==0.119.1
+uvicorn[standard]==0.38.0
+sqlalchemy==2.0.43
+PyMySQL==1.1.2          # MySQL driver
+cryptography            # For MySQL 8 caching_sha2_password
+python-dotenv==1.1.1    # For .env
+tensorflow==2.18.0      # Supports .keras
+numpy==2.0.2
+crcmod==1.7
+reedsolo==1.7.0
