@@ -1,6 +1,6 @@
 # backend/core/ai/model_loader.py
 import os
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 from dotenv import load_dotenv
 
 load_dotenv()
