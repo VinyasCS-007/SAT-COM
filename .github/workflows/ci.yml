@@ -89,7 +89,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build backend image
-        run: docker build -f backend/Dockerfile -t satcom-ai-backend .
+        run: docker build -f backend/Dockerfile -t satcom-ai-backend backend/
 
       - name: Build frontend image
         run: docker build -f frontend/Dockerfile -t satcom-ai-frontend .
