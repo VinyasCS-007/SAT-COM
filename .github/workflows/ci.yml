@@ -92,4 +92,4 @@ jobs:
         run: docker build -f backend/Dockerfile -t satcom-ai-backend backend/
 
       - name: Build frontend image
-        run: docker build -f frontend/Dockerfile -t satcom-ai-frontend .
+        run: docker build -f frontend/Dockerfile -t satcom-ai-frontend frontend/
