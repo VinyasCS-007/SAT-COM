@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Dashboard } from './components/Dashboard.tsx';
 
 function App() {
