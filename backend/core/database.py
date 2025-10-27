@@ -40,4 +40,4 @@ class TelemetryLog(Base):
     ber_after = Column(Float, nullable=False)
     ai_corrected = Column(Integer, nullable=False)  # 0 or 1
     latency_ms = Column(Float, nullable=False)
-    timestamp = Column(DateTime(timezone=True), server_default=func.now)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())

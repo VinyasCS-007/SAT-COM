@@ -1,3 +1,4 @@
+// frontend/src/hooks/useSimulation.ts
 import { useState } from 'react';
 import { SimulationConfig, SimulationResult, simulateTransmission } from '../services/api';
 
@@ -44,5 +45,26 @@ export const useSimulation = () => {
     setBerHistory([]);
   };
 
-  return { isRunning, frames, berHistory, runSimulation, clearResults };
+  // Calculate performance statistics
+  const performanceStats = {
+    averageBERImprovement: frames.length > 0 
+      ? frames.reduce((acc, frame) => acc + (frame.result.ber_before / frame.result.ber_after), 0) / frames.length
+      : 0,
+    totalFrames: frames.length,
+    successRate: frames.length > 0
+      ? (frames.filter(f => f.result.ecc_used || f.result.ai_corrected).length / frames.length) * 100
+      : 0,
+    averageLatency: frames.length > 0
+      ? frames.reduce((acc, frame) => acc + frame.result.latency_ms, 0) / frames.length
+      : 0
+  };
+
+  return { 
+    isRunning, 
+    frames, 
+    berHistory, 
+    performanceStats,
+    runSimulation, 
+    clearResults 
+  };
 };

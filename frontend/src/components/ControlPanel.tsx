@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SimulationConfig } from '../services/api';
 import { useSimulation } from '../hooks/useSimulation';
+import { Play, Square, Settings } from 'lucide-react';
 
 interface ControlPanelProps {
   onClear: () => void;
@@ -34,11 +35,29 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({ onClear }) => {
   };
 
   return (
-    <div className="bg-gray-800 p-4 rounded-lg shadow mb-6">
-      <h2 className="text-xl font-semibold mb-4 text-cyan-300">Simulation Controls</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm mb-1">Payload Size (bytes)</label>
+    <div className="bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm rounded-3xl border border-white/10 p-8 shadow-2xl">
+      
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
+            <Settings className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-semibold text-white">Simulation Controls</h2>
+            <p className="text-apple-light-gray text-sm">Configure transmission parameters</p>
+          </div>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        
+        {/* Payload Size */}
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <label className="text-sm font-medium text-white">Payload Size</label>
+            <span className="text-cyan-400 font-mono text-sm">{config.payload_size} bytes</span>
+          </div>
           <input
             type="range"
             name="payload_size"
@@ -46,13 +65,21 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({ onClear }) => {
             max="223"
             value={config.payload_size}
             onChange={handleChange}
-            className="w-full"
+            className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer 
+                       accent-cyan-400 hover:accent-blue-500 transition-all duration-300"
           />
-          <span className="text-xs">{config.payload_size}</span>
+          <div className="flex justify-between text-xs text-apple-light-gray">
+            <span>4B</span>
+            <span>223B</span>
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm mb-1">SNR (dB)</label>
+        {/* SNR */}
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <label className="text-sm font-medium text-white">Signal-to-Noise Ratio</label>
+            <span className="text-blue-400 font-mono text-sm">{config.snr_db} dB</span>
+          </div>
           <input
             type="range"
             name="snr_db"
@@ -61,32 +88,40 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({ onClear }) => {
             step="0.5"
             value={config.snr_db}
             onChange={handleChange}
-            className="w-full"
+            className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer 
+                       accent-blue-400 hover:accent-cyan-500 transition-all duration-300"
           />
-          <span className="text-xs">{config.snr_db} dB</span>
+          <div className="flex justify-between text-xs text-apple-light-gray">
+            <span>0 dB</span>
+            <span>20 dB</span>
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm mb-1">Noise Type</label>
+        {/* Noise Type */}
+        <div className="space-y-3">
+          <label className="text-sm font-medium text-white">Noise Environment</label>
           <select
             name="noise_type"
             value={config.noise_type}
             onChange={handleChange}
-            className="w-full p-1 bg-gray-700 rounded text-sm"
+            className="w-full p-4 bg-white/5 border border-white/10 rounded-xl text-white text-sm 
+                       focus:border-cyan-500/50 focus:outline-none transition-all duration-300"
           >
-            <option value="awgn">AWGN</option>
+            <option value="awgn">Additive White Gaussian Noise (AWGN)</option>
             <option value="burst">Burst Errors</option>
             <option value="fading">Rayleigh Fading</option>
           </select>
         </div>
 
-        <div>
-          <label className="block text-sm mb-1">ECC Scheme</label>
+        {/* ECC Scheme */}
+        <div className="space-y-3">
+          <label className="text-sm font-medium text-white">ECC Scheme</label>
           <select
             name="ecc_scheme"
             value={config.ecc_scheme}
             onChange={handleChange}
-            className="w-full p-1 bg-gray-700 rounded text-sm"
+            className="w-full p-4 bg-white/5 border border-white/10 rounded-xl text-white text-sm 
+                       focus:border-blue-500/50 focus:outline-none transition-all duration-300"
           >
             <option value="reed_solomon">Reed–Solomon (255,223)</option>
             <option value="hamming">Hamming (7,4)</option>
@@ -94,31 +129,57 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({ onClear }) => {
           </select>
         </div>
 
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            name="auto_ecc"
-            checked={config.auto_ecc}
-            onChange={handleChange}
-            className="mr-2"
-          />
-          <label className="text-sm">Enable Adaptive ECC Controller</label>
+        {/* Adaptive ECC Toggle */}
+        <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
+          <div>
+            <div className="text-sm font-medium text-white">Adaptive AI Controller</div>
+            <div className="text-xs text-apple-light-gray">Dynamic error correction switching</div>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              name="auto_ecc"
+              checked={config.auto_ecc}
+              onChange={handleChange}
+              className="sr-only peer"
+            />
+            <div className="w-12 h-6 bg-white/20 peer-focus:outline-none rounded-full relative 
+                            peer-checked:after:translate-x-6 after:content-[''] after:absolute 
+                            after:top-[2px] after:left-[2px] after:bg-white after:rounded-full 
+                            after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+          </label>
         </div>
 
-        <div className="flex gap-2 pt-2">
+        {/* Action Buttons */}
+        <div className="flex gap-4 pt-4">
           <button
             type="submit"
             disabled={isRunning}
-            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded disabled:opacity-50 text-sm"
+            className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 
+                       hover:to-blue-700 disabled:opacity-50 text-white font-medium py-4 px-6 
+                       rounded-xl transition-all duration-300 flex items-center justify-center 
+                       space-x-2 shadow-lg shadow-cyan-500/25"
           >
-            {isRunning ? 'Simulating...' : 'Run Simulation'}
+            {isRunning ? (
+              <>
+                <Square className="w-4 h-4" />
+                <span>Stop Simulation</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-4 h-4" />
+                <span>Run Simulation</span>
+              </>
+            )}
           </button>
+          
           <button
             type="button"
             onClick={onClear}
-            className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded text-sm"
+            className="px-6 py-4 border border-white/20 hover:border-white/40 text-white font-medium 
+                       rounded-xl transition-all duration-300 hover:bg-white/5"
           >
-            Clear Results
+            Clear
           </button>
         </div>
       </form>
